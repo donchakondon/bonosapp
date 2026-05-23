@@ -26,17 +26,14 @@ body{font-family:'Raleway',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sa
 .rwd{font-size:11.5px;font-weight:700;color:#ECE9E2;margin-top:7px}
 .rwd b{color:#FFD166}
 .maphint{font-size:11px;font-weight:600;color:#7a776f;text-align:center;padding:8px 16px 4px}
-.map{position:relative;width:100%}
-.puzzle{display:block;width:100%;height:auto}
-.base{filter:grayscale(1) brightness(.46)}
-.pc{opacity:0;transition:opacity 1.1s ease}
-.pc.done{opacity:1}
-.cut{fill:none;stroke:rgba(255,255,255,.42);stroke-width:.5;stroke-linejoin:round}
-.frame{fill:none;stroke:rgba(255,255,255,.42);stroke-width:.7}
-.hit{fill:transparent;cursor:pointer;stroke:none}
-.hit.next{stroke:#EF476F;stroke-width:1.3;animation:pulse 1.6s ease-in-out infinite}
-.hit.sel{stroke:#fff;stroke-width:1.3}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.map{position:relative;font-size:0}
+.pc{position:relative;display:block;cursor:pointer;filter:grayscale(1) brightness(.5);transition:filter 1s ease}
+.pc.done{filter:none}
+.pc>img{display:block;width:100%}
+.pc::after{content:"";position:absolute;inset:0;pointer-events:none;border:3px solid transparent}
+.pc.sel::after{border-color:rgba(255,255,255,.95)}
+.pc.next::after{border-color:#EF476F;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{border-color:#EF476F}50%{border-color:rgba(239,71,111,.18)}}
 .card{margin:12px 14px 0;background:#1d1b22;border:1px solid #2a2730;border-radius:16px;padding:13px 15px}
 .card .nm{font-size:14.5px;font-weight:800;color:#ECE9E2}
 .card .st{font-size:12px;color:#9a978f;margin-top:4px;line-height:1.5;font-weight:600}
@@ -76,15 +73,15 @@ nav svg{width:21px;height:21px;display:block;margin:0 auto 3px}
 <div class="hd">
 <div class="hdtop">
 <img class="logo" src="https://theworksofmadness.com/wp-content/uploads/2025/12/logo-wom.png" alt="The Works of Madness">
-<span class="chip" id="rank">Aventurero</span>
+<span class="chip" id="rank">Novato</span>
 </div>
-<div class="rankrow"><span class="r">El puzzle de la locura</span><span class="c" id="count">4 / 7 piezas</span></div>
+<div class="rankrow"><span class="r">El puzzle de la locura</span><span class="c" id="count">0 / 7 piezas</span></div>
 <div class="pbar"><i id="bar"></i></div>
 <div class="rwd" id="reward">Proximo descuento: <b>10 EUR</b></div>
 </div>
-<div class="maphint">Un mapa, 7 salas. Cada sala es una pieza del puzzle: al jugarla se ilumina a color.</div>
+<div class="maphint">Un mapa, 7 salas. Cada sala es una pieza: al jugarla se ilumina a color.</div>
 <div class="map" id="map"></div>
-<div class="card"><div class="nm" id="infoName">Las Reliquias de Judith</div><div class="st" id="infoSt">Tu proxima pieza. Juega esta sala y se ilumina en el mapa.</div></div>
+<div class="card"><div class="nm" id="infoName">El Sotano</div><div class="st" id="infoSt">Tu proxima pieza. Juega esta sala y se ilumina en el mapa.</div></div>
 <div class="demo">
 <div class="tag">Modo demo</div>
 <button id="play">Jugar la siguiente sala</button>
@@ -100,6 +97,7 @@ nav svg{width:21px;height:21px;display:block;margin:0 auto 3px}
 <p>Tus codigos de descuento. Aplicalos al reservar en theworksofmadness.com</p>
 </div>
 <div id="codeList"></div>
+<div id="codeEmpty" style="margin:24px 16px;text-align:center;font-size:12px;color:#6f6c66;font-weight:600">Aun no tienes codigos. Juega tu primera sala para ganar tu primer descuento.</div>
 </div>
 
 <div class="view" id="viewPerfil">
@@ -109,9 +107,9 @@ nav svg{width:21px;height:21px;display:block;margin:0 auto 3px}
 </div>
 <div class="prof"><div class="av">M</div><div><div style="font-size:15px;font-weight:800">Manuel</div><div style="font-size:11.5px;color:#9a978f;font-weight:600;margin-top:2px">+34 6XX XXX XXX</div></div></div>
 <div class="stats">
-<div class="stat"><b id="pSalas">4</b><span>Piezas iluminadas</span></div>
-<div class="stat"><b id="pRango" style="font-size:11px;padding-top:3px">Aventurero</b><span>Rango</span></div>
-<div class="stat"><b id="pAhorro">30€</b><span>Ahorro total</span></div>
+<div class="stat"><b id="pSalas">0</b><span>Piezas iluminadas</span></div>
+<div class="stat"><b id="pRango" style="font-size:11px;padding-top:3px">Novato</b><span>Rango</span></div>
+<div class="stat"><b id="pAhorro">0€</b><span>Ahorro total</span></div>
 </div>
 </div>
 
@@ -133,54 +131,27 @@ document.getElementById('nMapa').innerHTML=IC.map+'Mapa';
 document.getElementById('nCod').innerHTML=IC.ticket+'Mis codigos';
 document.getElementById('nPerf').innerHTML=IC.user+'Perfil';
 
-// ROOMS in play order (0 = first played = bottom land of the map)
+// ROOMS in play order (0 = first played = bottom piece of the map)
 var ROOMS=['El Sotano','Pesadillas','Las Semillas de la Locura','Hammer Killer','Las Reliquias de Judith','Yucatan','Escuela de Magia'];
 var RANKS=['Novato','Novato','Explorador','Explorador','Aventurero','Aventurero','Veterano','Leyenda WOM'];
-var W=90,H=161.25,N=7,PH=H/N,IMG='mapa-salas.jpg';
-var progress=4,selected=4;
-
-function cutSeg(idx,rev){
- var y=(idx*PH).toFixed(2);
- if(idx===0||idx===N){ return rev?('L 0 '+y):('L '+W+' '+y); }
- var m=45,r=10.5,up=(idx%2===0);
- if(!rev){ var s=up?0:1; return 'L '+(m-r)+' '+y+' A '+r+' '+r+' 0 0 '+s+' '+(m+r)+' '+y+' L '+W+' '+y; }
- var s2=up?1:0; return 'L '+(m+r)+' '+y+' A '+r+' '+r+' 0 0 '+s2+' '+(m-r)+' '+y+' L 0 '+y;
-}
-// piece path for SVG row r (0 = top)
-function pieceD(r){
- var yt=(r*PH).toFixed(2), yb=((r+1)*PH).toFixed(2);
- return 'M 0 '+yt+' '+cutSeg(r,false)+' L '+W+' '+yb+' '+cutSeg(r+1,true)+' Z';
-}
-// SVG row r shows ROOMS[6-r] (room 0 = bottom land)
+var N=7;
+var progress=0,selected=0;
+// SVG row r (0 = top) shows ROOMS[6-r]; piece image pz{r}.jpg
 function roomOfRow(r){return 6-r;}
 
-var defs='',pieces='',cuts='',hits='';
-for(var r=0;r<N;r++){
- var d=pieceD(r);
- defs+='<clipPath id="cp'+r+'"><path d="'+d+'"/></clipPath>';
- pieces+='<image class="pc" id="pc'+r+'" href="'+IMG+'" x="0" y="0" width="'+W+'" height="'+H+'" preserveAspectRatio="xMidYMid slice" clip-path="url(#cp'+r+')"/>';
- hits+='<path class="hit" id="hit'+r+'" data-r="'+r+'" d="'+d+'"/>';
-}
-for(var c=1;c<N;c++){ cuts+='<path class="cut" d="M 0 '+(c*PH).toFixed(2)+' '+cutSeg(c,false)+'"/>'; }
-var svg='<svg class="puzzle" viewBox="0 0 '+W+' '+H.toFixed(2)+'">'
- +'<defs>'+defs+'</defs>'
- +'<image class="base" href="'+IMG+'" x="0" y="0" width="'+W+'" height="'+H+'" preserveAspectRatio="xMidYMid slice"/>'
- +pieces+cuts
- +'<rect class="frame" x="0" y="0" width="'+W+'" height="'+H+'"/>'
- +hits+'</svg>';
 var map=document.getElementById('map');
-map.innerHTML=svg;
-
-[].forEach.call(map.querySelectorAll('.hit'),function(h){
- h.addEventListener('click',function(){selected=roomOfRow(+h.getAttribute('data-r'));render();});
-});
+for(var r=0;r<N;r++){
+ var pc=document.createElement('div');
+ pc.className='pc';pc.id='pc'+r;pc.setAttribute('data-r',r);
+ pc.innerHTML='<img src="pz'+r+'.jpg" alt="">';
+ (function(rr){pc.addEventListener('click',function(){selected=roomOfRow(rr);render();});})(r);
+ map.appendChild(pc);
+}
 
 function render(){
  for(var r=0;r<N;r++){
-  var room=roomOfRow(r);
-  var pc=document.getElementById('pc'+r),hit=document.getElementById('hit'+r);
-  pc.classList.toggle('done',room<progress);
-  hit.className='hit'+(room===progress?' next':'')+(room===selected?' sel':'');
+  var room=roomOfRow(r),pc=document.getElementById('pc'+r);
+  pc.className='pc'+(room<progress?' done':'')+(room===progress?' next':'')+(room===selected?' sel':'');
  }
  document.getElementById('rank').textContent=RANKS[Math.min(progress,7)];
  document.getElementById('count').textContent=progress+' / 7 piezas';
@@ -196,17 +167,15 @@ function render(){
  else su.textContent='Pieza aun en gris. Esta sala todavia no la has jugado.';
  document.getElementById('pSalas').textContent=progress;
  document.getElementById('pRango').textContent=RANKS[Math.min(progress,7)];
+ var ah=0;for(var k=0;k<progress;k++)ah+=(k>=3?20:10);if(progress>=7)ah+=30;
+ document.getElementById('pAhorro').textContent=ah+'€';
 }
 
-var INIT=[
-{val:20,code:'WOM-7H1Q-B8',meta:'Recompensa de rango Aventurero',estado:'activo'},
-{val:10,code:'WOM-4F9K-A2',meta:'Ganado tras jugar Hammer Killer',estado:'activo'},
-{val:10,code:'WOM-2C5M-X4',meta:'Usado en Pesadillas',estado:'usado'}
-];
-var CODES=INIT.slice();
+var CODES=[];
 function rc(){var s='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',o='';for(var i=0;i<4;i++)o+=s[Math.floor(Math.random()*s.length)];o+='-';for(var j=0;j<2;j++)o+=s[Math.floor(Math.random()*s.length)];return 'WOM-'+o;}
 function renderCodes(){
  var L=document.getElementById('codeList');L.innerHTML='';
+ document.getElementById('codeEmpty').style.display=CODES.length?'none':'block';
  CODES.forEach(function(c){
   var act=c.estado==='activo';
   var d=document.createElement('div');d.className='ccard';
@@ -218,12 +187,12 @@ function renderCodes(){
 }
 document.getElementById('play').addEventListener('click',function(){
  if(progress<7){
-  CODES.unshift({val:(progress+1===4?20:10),code:rc(),meta:'Ganado tras jugar '+ROOMS[progress],estado:'activo'});
+  CODES.unshift({val:(progress>=3?20:10),code:rc(),meta:'Ganado tras jugar '+ROOMS[progress],estado:'activo'});
   renderCodes();
   progress++;selected=Math.min(progress,6);render();
  }
 });
-document.getElementById('reset').addEventListener('click',function(){progress=4;selected=4;CODES=INIT.slice();renderCodes();render();});
+document.getElementById('reset').addEventListener('click',function(){progress=0;selected=0;CODES=[];renderCodes();render();});
 
 var V={Mapa:'viewMapa',Cod:'viewCodigos',Perf:'viewPerfil'};
 function show(k){
