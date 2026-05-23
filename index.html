@@ -37,8 +37,13 @@ body{font-family:'Raleway',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sa
 .hit.next{stroke:#EF476F;stroke-width:1.4;animation:pulse 1.6s ease-in-out infinite}
 .hit.sel{stroke:#fff;stroke-width:1.4}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.ztag{position:absolute;left:8px;background:rgba(20,19,24,.9);border:1px solid #3a3640;color:#ECE9E2;padding:4px 10px;border-radius:20px;font-size:9px;font-weight:800;letter-spacing:1.4px;display:flex;align-items:center;gap:5px}
-.ztag svg{width:12px;height:12px}
+.lbl{pointer-events:none}
+.lblbg{fill:rgba(14,13,18,.84);stroke:rgba(255,255,255,.22);stroke-width:.4}
+.lbltx{fill:#d7d4cc;font-family:'Raleway',sans-serif;font-weight:800;font-size:4.2px;text-anchor:middle;dominant-baseline:central;letter-spacing:.1px}
+.lbl.done .lblbg{fill:rgba(6,50,31,.9);stroke:#06D6A0;stroke-width:.55}
+.lbl.done .lbltx{fill:#06D6A0}
+.lbl.next .lblbg{stroke:#EF476F;stroke-width:.85}
+.lbl.next .lbltx{fill:#fff}
 .card{margin:12px 14px 0;background:#1d1b22;border:1px solid #2a2730;border-radius:16px;padding:13px 15px}
 .card .nm{font-size:14.5px;font-weight:800;color:#ECE9E2}
 .card .st{font-size:12px;color:#9a978f;margin-top:4px;line-height:1.5;font-weight:600}
@@ -84,7 +89,7 @@ nav svg{width:21px;height:21px;display:block;margin:0 auto 3px}
 <div class="pbar"><i id="bar"></i></div>
 <div class="rwd" id="reward">Proximo descuento: <b>10 EUR</b></div>
 </div>
-<div class="maphint">Cada sala es una pieza del puzzle. Al jugarla, su pieza se ilumina a color.</div>
+<div class="maphint">Un mapa, 7 piezas. Cada pieza es una sala: juegala y se ilumina a color.</div>
 <div class="map" id="map"></div>
 <div class="card"><div class="nm" id="infoName">Las Reliquias de Judith</div><div class="st" id="infoSt">Tu proxima pieza. Juega esta sala y se ilumina en el mapa.</div></div>
 <div class="demo">
@@ -129,18 +134,14 @@ nav svg{width:21px;height:21px;display:block;margin:0 auto 3px}
 var IC={
 map:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6.5v13.5L9 17.5 15 20l6-2.5V4l-6 2.5L9 4z"/><path d="M9 4v13.5M15 6.5V20"/></svg>',
 ticket:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2A2 2 0 0 0 20 12a2 2 0 0 0 0 3.5 2 2 0 0 1-2 2H6a2 2 0 0 1-2-2 2 2 0 0 0 0-3.5 2 2 0 0 0 0-3.5z"/><path d="M12 6.5v11"/></svg>',
-user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20c.6-3.8 3.8-6 7.5-6s6.9 2.2 7.5 6"/></svg>',
-flame:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2c.5 4-3 5.5-3 9a3 3 0 0 0 5.2 2C16 17 15 15 15 14c2 1.2 3.5 3.4 3.5 6A6.5 6.5 0 0 1 5.5 20c0-5.5 6-7.5 7.5-18z"/></svg>',
-search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.6-4.6"/></svg>',
-compass:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M15.6 8.4l-2.1 5.1-5.1 2.1 2.1-5.1z" fill="currentColor"/></svg>'
+user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20c.6-3.8 3.8-6 7.5-6s6.9 2.2 7.5 6"/></svg>'
 };
 document.getElementById('nMapa').innerHTML=IC.map+'Mapa';
 document.getElementById('nCod').innerHTML=IC.ticket+'Mis codigos';
 document.getElementById('nPerf').innerHTML=IC.user+'Perfil';
 
-// ROOMS in play order (0 = first played = bottom piece)
+// ROOMS in play order (0 = first played = bottom piece of the map)
 var ROOMS=['El Sotano','Pesadillas','Las Semillas de la Locura','Hammer Killer','Las Reliquias de Judith','Yucatan','Escuela de Magia'];
-var ZONES=[{n:'Terror',ic:'flame'},{n:'Terror',ic:'flame'},{n:'Terror',ic:'flame'},{n:'Investigacion',ic:'search'},{n:'Investigacion',ic:'search'},{n:'Aventura',ic:'compass'},{n:'Aventura',ic:'compass'}];
 var RANKS=['Novato','Novato','Explorador','Explorador','Aventurero','Aventurero','Veterano','Leyenda WOM'];
 var W=90,H=160,N=7,PH=H/N,IMG='mapa-mundo.jpg';
 var progress=4,selected=4;
@@ -152,20 +153,22 @@ function cutSeg(idx,rev){
  if(!rev){ var s=up?0:1; return 'L '+(m-r)+' '+y+' A '+r+' '+r+' 0 0 '+s+' '+(m+r)+' '+y+' L '+W+' '+y; }
  var s2=up?1:0; return 'L '+(m+r)+' '+y+' A '+r+' '+r+' 0 0 '+s2+' '+(m-r)+' '+y+' L 0 '+y;
 }
-// piece for SVG row r (0 = top)
+// piece path for SVG row r (0 = top)
 function pieceD(r){
  var yt=(r*PH).toFixed(2), yb=((r+1)*PH).toFixed(2);
  return 'M 0 '+yt+' '+cutSeg(r,false)+' L '+W+' '+yb+' '+cutSeg(r+1,true)+' Z';
 }
-// SVG row r shows ROOMS[6-r]
+// SVG row r shows ROOMS[6-r] (room 0 at the bottom)
 function roomOfRow(r){return 6-r;}
 
-var defs='',pieces='',cuts='',hits='';
+var defs='',pieces='',cuts='',hits='',labels='';
 for(var r=0;r<N;r++){
  var d=pieceD(r);
  defs+='<clipPath id="cp'+r+'"><path d="'+d+'"/></clipPath>';
  pieces+='<image class="pc" id="pc'+r+'" href="'+IMG+'" x="0" y="0" width="'+W+'" height="'+H+'" preserveAspectRatio="xMidYMid slice" clip-path="url(#cp'+r+')"/>';
  hits+='<path class="hit" id="hit'+r+'" data-r="'+r+'" d="'+d+'"/>';
+ var cy=(r*PH+PH/2).toFixed(2);
+ labels+='<g class="lbl" id="lbl'+r+'"><rect class="lblbg" rx="3.2"/><text class="lbltx" x="45" y="'+cy+'">'+ROOMS[roomOfRow(r)]+'</text></g>';
 }
 for(var c=1;c<N;c++){ cuts+='<path class="cut" d="M 0 '+(c*PH).toFixed(2)+' '+cutSeg(c,false)+'"/>'; }
 var svg='<svg class="puzzle" viewBox="0 0 '+W+' '+H+'">'
@@ -173,16 +176,24 @@ var svg='<svg class="puzzle" viewBox="0 0 '+W+' '+H+'">'
  +'<image class="base" href="'+IMG+'" x="0" y="0" width="'+W+'" height="'+H+'" preserveAspectRatio="xMidYMid slice"/>'
  +pieces+cuts
  +'<rect class="frame" x="0" y="0" width="'+W+'" height="'+H+'"/>'
- +hits+'</svg>';
+ +hits+labels+'</svg>';
 var map=document.getElementById('map');
 map.innerHTML=svg;
-// zone tags overlaid
-[[0,'Aventura','compass'],[3,'Investigacion','search'],[5,'Terror','flame']].forEach(function(z){
- var d=document.createElement('div');d.className='ztag';
- d.style.top=((z[0]*PH+PH*0.5)/H*100)+'%';
- d.innerHTML=IC[z[2]]+z[1];
- map.appendChild(d);
-});
+
+function sizeLabels(){
+ for(var r=0;r<N;r++){
+  var g=document.getElementById('lbl'+r);
+  var tx=g.querySelector('.lbltx'), rect=g.querySelector('.lblbg');
+  var bb=tx.getBBox(), padX=4.2, padY=2.6;
+  rect.setAttribute('x',(bb.x-padX).toFixed(2));
+  rect.setAttribute('y',(bb.y-padY).toFixed(2));
+  rect.setAttribute('width',(bb.width+padX*2).toFixed(2));
+  rect.setAttribute('height',(bb.height+padY*2).toFixed(2));
+ }
+}
+if(document.fonts&&document.fonts.ready){document.fonts.ready.then(sizeLabels);}
+sizeLabels();setTimeout(sizeLabels,400);
+
 [].forEach.call(map.querySelectorAll('.hit'),function(h){
  h.addEventListener('click',function(){selected=roomOfRow(+h.getAttribute('data-r'));render();});
 });
@@ -190,9 +201,10 @@ map.innerHTML=svg;
 function render(){
  for(var r=0;r<N;r++){
   var room=roomOfRow(r);
-  var pc=document.getElementById('pc'+r),hit=document.getElementById('hit'+r);
+  var pc=document.getElementById('pc'+r),hit=document.getElementById('hit'+r),lbl=document.getElementById('lbl'+r);
   pc.classList.toggle('done',room<progress);
   hit.className='hit'+(room===progress?' next':'')+(room===selected?' sel':'');
+  lbl.setAttribute('class','lbl'+(room<progress?' done':'')+(room===progress?' next':''));
  }
  document.getElementById('rank').textContent=RANKS[Math.min(progress,7)];
  document.getElementById('count').textContent=progress+' / 7 piezas';
