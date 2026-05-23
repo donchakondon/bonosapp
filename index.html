@@ -13,40 +13,49 @@ html,body{background:#0e0d12}
 body{font-family:'Raleway',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#ECE9E2;-webkit-font-smoothing:antialiased}
 .app{max-width:430px;margin:0 auto;min-height:100vh;position:relative;padding-bottom:70px;overflow:hidden;background:#0e0d12}
 .view{display:none}
-.view.on{display:block}
+.view.on{display:block;animation:fade .34s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
 .hd{padding:15px 18px 13px;background:#141318;border-bottom:1px solid #2a2730}
 .hdtop{display:flex;align-items:center;justify-content:space-between}
 .logo{height:32px;width:auto}
-.chip{background:#06D6A0;color:#06321f;padding:5px 12px;border-radius:20px;font-size:11.5px;font-weight:800}
+.chip{background:#06D6A0;color:#06321f;padding:5px 12px;border-radius:20px;font-size:11.5px;font-weight:800;transition:transform .3s ease}
+.chip.bump{animation:bump .5s ease}
+@keyframes bump{0%,100%{transform:scale(1)}40%{transform:scale(1.18)}}
 .rankrow{display:flex;justify-content:space-between;align-items:baseline;margin-top:11px}
 .rankrow .r{font-size:12.5px;font-weight:800;color:#FFD166}
 .rankrow .c{font-size:12px;font-weight:700;color:#9a978f}
 .pbar{height:8px;background:#2a2730;border-radius:6px;margin-top:7px;overflow:hidden}
-.pbar>i{display:block;height:100%;width:0;background:#06D6A0;border-radius:6px;transition:width .6s ease}
+.pbar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#06D6A0,#5ef0c6);border-radius:6px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
 .rwd{font-size:11.5px;font-weight:700;color:#ECE9E2;margin-top:7px}
 .rwd b{color:#FFD166}
-.maphint{font-size:11px;font-weight:600;color:#7a776f;text-align:center;padding:8px 16px 4px}
+.maphint{font-size:11px;font-weight:600;color:#8a877f;text-align:center;padding:9px 18px 5px;line-height:1.5}
 .map{position:relative;font-size:0}
-.pc{position:relative;display:block;cursor:pointer;filter:grayscale(1) brightness(.5);transition:filter 1s ease}
+.pc{position:relative;display:block;cursor:pointer;filter:grayscale(1) brightness(.46);transition:filter 1.1s ease,transform .15s ease}
+.pc:active{transform:scale(.985)}
 .pc.done{filter:none}
 .pc>img{display:block;width:100%}
-.pc::after{content:"";position:absolute;inset:0;pointer-events:none;border:3px solid transparent}
-.pc.sel::after{border-color:rgba(255,255,255,.95)}
-.pc.next::after{border-color:#EF476F;animation:pulse 1.6s ease-in-out infinite}
-@keyframes pulse{0%,100%{border-color:#EF476F}50%{border-color:rgba(239,71,111,.18)}}
-.card{margin:12px 14px 0;background:#1d1b22;border:1px solid #2a2730;border-radius:16px;padding:13px 15px}
-.card .nm{font-size:14.5px;font-weight:800;color:#ECE9E2}
-.card .st{font-size:12px;color:#9a978f;margin-top:4px;line-height:1.5;font-weight:600}
-.demo{margin:13px 14px 0;text-align:center}
-.demo .tag{font-size:9px;letter-spacing:2px;color:#6f6c66;text-transform:uppercase;font-weight:800;margin-bottom:9px}
-.demo button{font-family:inherit;font-size:13px;font-weight:800;color:#06321f;background:#06D6A0;border:none;border-radius:11px;padding:12px 17px;cursor:pointer}
-.demo button.ghost{background:transparent;color:#9a978f;border:1px solid #3a3640}
-.demo .hint{font-size:11px;color:#6f6c66;margin-top:10px;line-height:1.55;font-weight:600}
+.pc::after{content:"";position:absolute;inset:0;pointer-events:none;border:3px solid transparent;transition:border-color .25s}
+.pc.sel::after{border-color:rgba(255,255,255,.92)}
+.pc.revealing{animation:reveal 1.3s ease;z-index:6}
+@keyframes reveal{
+0%{transform:scale(.96);filter:grayscale(.5) brightness(1.7);box-shadow:0 0 0 0 rgba(255,209,102,0)}
+45%{transform:scale(1.035);box-shadow:0 0 36px 7px rgba(255,209,102,.85)}
+100%{transform:scale(1);filter:none;box-shadow:0 0 0 0 rgba(255,209,102,0)}
+}
+.badge{position:absolute;right:9px;bottom:9px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:3;pointer-events:none}
+.badge svg{width:16px;height:16px}
+.pc:not(.done) .badge{background:#EF476F;color:#fff;box-shadow:0 3px 9px rgba(0,0,0,.5);animation:bpulse 1.9s ease-in-out infinite}
+.pc.done .badge{background:#06D6A0;color:#06321f;box-shadow:0 3px 9px rgba(0,0,0,.5)}
+@keyframes bpulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(239,71,111,.55)}50%{transform:scale(1.08);box-shadow:0 0 0 9px rgba(239,71,111,0)}}
+.demo{margin:14px 14px 4px;text-align:center}
+.demo button{font-family:inherit;font-size:11px;font-weight:800;color:#9a978f;background:transparent;border:1px solid #3a3640;border-radius:10px;padding:9px 16px;cursor:pointer}
+.demo .hint{font-size:10.5px;color:#6f6c66;margin-top:9px;line-height:1.55;font-weight:600}
 .vh{padding:18px 18px 4px;background:#141318;border-bottom:1px solid #2a2730}
 .vh img{height:28px}
 .vh h2{font-size:19px;font-weight:800;margin-top:9px;color:#ECE9E2}
 .vh p{font-size:12px;color:#9a978f;margin-top:5px;line-height:1.5;font-weight:600}
-.ccard{margin:13px 14px 0;background:#1d1b22;border:1px solid #2a2730;border-radius:16px;padding:13px;display:flex;gap:12px;align-items:center}
+.ccard{margin:13px 14px 0;background:#1d1b22;border:1px solid #2a2730;border-radius:16px;padding:13px;display:flex;gap:12px;align-items:center;animation:slidein .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes slidein{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
 .cval{flex-shrink:0;width:58px;height:58px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .cval b{font-size:18px;font-weight:800;line-height:1}
 .cval span{font-size:8px;font-weight:800;letter-spacing:1px;margin-top:2px}
@@ -54,16 +63,51 @@ body{font-family:'Raleway',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sa
 .ccode{font-family:'Courier New',monospace;font-size:15px;font-weight:700;letter-spacing:.5px;color:#ECE9E2}
 .cmeta{font-size:10.5px;color:#7a776f;margin-top:3px;font-weight:600}
 .cpill{display:inline-block;font-size:9px;font-weight:800;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.6px;margin-top:6px}
+.empty{margin:26px 18px;text-align:center;font-size:12px;color:#6f6c66;font-weight:600;line-height:1.6}
 .prof{margin:16px 14px 0;background:#1d1b22;border:1px solid #2a2730;border-radius:16px;padding:16px;display:flex;align-items:center;gap:13px}
 .av{width:54px;height:54px;border-radius:50%;background:#06D6A0;color:#06321f;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:800}
 .stats{display:flex;gap:9px;margin:11px 14px 0}
 .stat{flex:1;background:#1d1b22;border:1px solid #2a2730;border-radius:14px;padding:12px 6px;text-align:center}
 .stat b{display:block;font-size:17px;font-weight:800;color:#FFD166}
 .stat span{font-size:9.5px;color:#9a978f;font-weight:700}
-nav{position:fixed;left:0;right:0;bottom:0;max-width:430px;margin:0 auto;display:flex;background:#141318;border-top:1px solid #2a2730}
-nav button{flex:1;border:none;background:none;padding:9px 0 8px;font-family:inherit;font-size:10px;font-weight:800;color:#6f6c66;cursor:pointer}
+nav{position:fixed;left:0;right:0;bottom:0;max-width:430px;margin:0 auto;display:flex;background:#141318;border-top:1px solid #2a2730;z-index:30}
+nav button{flex:1;border:none;background:none;padding:9px 0 8px;font-family:inherit;font-size:10px;font-weight:800;color:#6f6c66;cursor:pointer;transition:color .2s}
 nav button.on{color:#06D6A0}
+nav button.on svg{transform:translateY(-2px);transition:transform .2s}
 nav svg{width:21px;height:21px;display:block;margin:0 auto 3px}
+.modal{position:fixed;inset:0;max-width:430px;margin:0 auto;background:rgba(7,7,10,.74);display:none;z-index:60}
+.modal.on{display:block;animation:fade .22s ease}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#17161c;border-radius:22px 22px 0 0;border-top:1px solid #2f2b35;padding:10px 20px 26px;animation:slideup .36s cubic-bezier(.2,.85,.25,1)}
+@keyframes slideup{from{transform:translateY(105%)}to{transform:translateY(0)}}
+.grip{width:38px;height:4px;border-radius:3px;background:#3a3640;margin:0 auto 14px}
+.sh-room{font-size:19px;font-weight:800;text-align:center;color:#ECE9E2}
+.sh-q{font-size:13px;font-weight:800;color:#FFD166;text-align:center;margin-top:9px}
+.sh-txt{font-size:12px;font-weight:600;color:#9a978f;text-align:center;line-height:1.6;margin-top:8px;padding:0 4px}
+.sh-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;font-family:inherit;font-size:13.5px;font-weight:800;color:#06321f;background:#06D6A0;border:none;border-radius:13px;padding:14px;cursor:pointer;margin-top:16px;transition:transform .12s}
+.sh-btn:active{transform:scale(.97)}
+.sh-btn svg{width:18px;height:18px}
+.sh-btn.ghost{background:transparent;color:#9a978f;border:1px solid #3a3640}
+.sh-x{display:block;width:100%;text-align:center;font-family:inherit;font-size:11.5px;font-weight:700;color:#6f6c66;background:none;border:none;padding:12px 0 2px;cursor:pointer;margin-top:4px}
+.scanner{width:208px;height:208px;margin:18px auto 4px;position:relative;background:#0c0b0f;border-radius:16px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.scanner .qr{width:148px;height:148px;opacity:.92}
+.corner{position:absolute;width:30px;height:30px;border:3px solid #06D6A0}
+.corner.tl{top:12px;left:12px;border-right:0;border-bottom:0;border-radius:6px 0 0 0}
+.corner.tr{top:12px;right:12px;border-left:0;border-bottom:0;border-radius:0 6px 0 0}
+.corner.bl{bottom:12px;left:12px;border-right:0;border-top:0;border-radius:0 0 0 6px}
+.corner.br{bottom:12px;right:12px;border-left:0;border-top:0;border-radius:0 0 6px 0}
+.scanline{position:absolute;left:10px;right:10px;height:3px;background:linear-gradient(90deg,transparent,#06D6A0,transparent);box-shadow:0 0 14px 3px rgba(6,214,160,.7);animation:scan 1.8s ease-in-out infinite}
+@keyframes scan{0%,100%{top:20px}50%{top:185px}}
+.burst{width:74px;height:74px;margin:6px auto 2px;border-radius:50%;background:radial-gradient(circle,#FFD166,#EF8A3f);display:flex;align-items:center;justify-content:center;animation:burst .6s cubic-bezier(.2,1.5,.4,1)}
+.burst svg{width:40px;height:40px;color:#3a2400}
+@keyframes burst{0%{transform:scale(0) rotate(-40deg)}100%{transform:scale(1) rotate(0)}}
+.codebox{margin:14px auto 0;background:#0e0d12;border:1px solid #3a3640;border-radius:14px;padding:13px;display:flex;align-items:center;gap:13px}
+.codebox .cv{flex-shrink:0;width:54px;height:54px;border-radius:12px;background:#FFD166;color:#3a2a00;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.codebox .cv b{font-size:17px;font-weight:800;line-height:1}
+.codebox .cv span{font-size:7.5px;font-weight:800;letter-spacing:1px;margin-top:2px}
+.codebox .cc{flex:1;font-family:'Courier New',monospace;font-size:17px;font-weight:700;color:#ECE9E2}
+.codebox .cc small{display:block;font-family:'Raleway';font-size:9.5px;color:#7a776f;font-weight:700;margin-top:3px;letter-spacing:.4px}
+.sh-tag{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;padding:5px 12px;border-radius:20px;background:#06D6A0;color:#06321f;margin:10px auto 0}
+.sh-center{text-align:center}
 </style>
 </head>
 <body>
@@ -77,16 +121,13 @@ nav svg{width:21px;height:21px;display:block;margin:0 auto 3px}
 </div>
 <div class="rankrow"><span class="r">El puzzle de la locura</span><span class="c" id="count">0 / 7 piezas</span></div>
 <div class="pbar"><i id="bar"></i></div>
-<div class="rwd" id="reward">Proximo descuento: <b>10 EUR</b></div>
+<div class="rwd" id="reward">Cada sala que juegas ilumina su pieza y te da un descuento.</div>
 </div>
-<div class="maphint">Un mapa, 7 salas. Cada sala es una pieza: al jugarla se ilumina a color.</div>
+<div class="maphint">Toca la sala que acabas de jugar para escanear su QR e iluminar tu pieza del mapa. Las salas se pueden jugar en cualquier orden.</div>
 <div class="map" id="map"></div>
-<div class="card"><div class="nm" id="infoName">El Sotano</div><div class="st" id="infoSt">Tu proxima pieza. Juega esta sala y se ilumina en el mapa.</div></div>
 <div class="demo">
-<div class="tag">Modo demo</div>
-<button id="play">Jugar la siguiente sala</button>
-<button id="reset" class="ghost">Reiniciar</button>
-<div class="hint">Toca una pieza para ver su sala. En la app real, escanear el QR de la sala ilumina su pieza.</div>
+<button id="reset">Reiniciar demo</button>
+<div class="hint">Demo: el escaneo del QR esta simulado. En la app real abre la camara.</div>
 </div>
 </div>
 
@@ -97,7 +138,7 @@ nav svg{width:21px;height:21px;display:block;margin:0 auto 3px}
 <p>Tus codigos de descuento. Aplicalos al reservar en theworksofmadness.com</p>
 </div>
 <div id="codeList"></div>
-<div id="codeEmpty" style="margin:24px 16px;text-align:center;font-size:12px;color:#6f6c66;font-weight:600">Aun no tienes codigos. Juega tu primera sala para ganar tu primer descuento.</div>
+<div class="empty" id="codeEmpty">Aun no tienes codigos.<br>Juega una sala y escanea su QR para ganar tu primer descuento.</div>
 </div>
 
 <div class="view" id="viewPerfil">
@@ -119,60 +160,77 @@ nav svg{width:21px;height:21px;display:block;margin:0 auto 3px}
 <button id="nPerf"></button>
 </nav>
 
+<div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
+
 </div>
 <script>
 (function(){
 var IC={
 map:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6.5v13.5L9 17.5 15 20l6-2.5V4l-6 2.5L9 4z"/><path d="M9 4v13.5M15 6.5V20"/></svg>',
 ticket:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2A2 2 0 0 0 20 12a2 2 0 0 0 0 3.5 2 2 0 0 1-2 2H6a2 2 0 0 1-2-2 2 2 0 0 0 0-3.5 2 2 0 0 0 0-3.5z"/><path d="M12 6.5v11"/></svg>',
-user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20c.6-3.8 3.8-6 7.5-6s6.9 2.2 7.5 6"/></svg>'
+user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="4"/><path d="M4.5 20c.6-3.8 3.8-6 7.5-6s6.9 2.2 7.5 6"/></svg>',
+qr:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm10-2h2v2h-2v-2zm4 0h2v2h-2v-2zm-4 4h2v2h-2v-2zm4 0h2v2h-2v-2zm-2 2h2v2h-2v-2zm0-6h2v2h-2v-2z"/></svg>',
+check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg>'
 };
 document.getElementById('nMapa').innerHTML=IC.map+'Mapa';
 document.getElementById('nCod').innerHTML=IC.ticket+'Mis codigos';
 document.getElementById('nPerf').innerHTML=IC.user+'Perfil';
 
-// ROOMS in play order (0 = first played = bottom piece of the map)
-var ROOMS=['El Sotano','Pesadillas','Las Semillas de la Locura','Hammer Killer','Las Reliquias de Judith','Yucatan','Escuela de Magia'];
+// rows 0..6 top->bottom of the map
+var NAMES=['Escuela de Magia','Yucatan','Las Reliquias de Judith','Hammer Killer','Las Semillas de la Locura','Pesadillas','El Sotano'];
 var RANKS=['Novato','Novato','Explorador','Explorador','Aventurero','Aventurero','Veterano','Leyenda WOM'];
 var N=7;
-var progress=0,selected=0;
-// SVG row r (0 = top) shows ROOMS[6-r]; piece image pz{r}.jpg
-function roomOfRow(r){return 6-r;}
+var done=[false,false,false,false,false,false,false];
+var CODES=[];
+
+function fauxQR(){
+ var n=21,m=7,s='';
+ function fp(ox,oy){var d='';for(var y=0;y<7;y++)for(var x=0;x<7;x++){var b=(x===0||x===6||y===0||y===6||(x>=2&&x<=4&&y>=2&&y<=4));if(b)d+='<rect x="'+((ox+x)*m)+'" y="'+((oy+y)*m)+'" width="'+m+'" height="'+m+'"/>';}return d;}
+ for(var y=0;y<n;y++)for(var x=0;x<n;x++){
+  var corner=(x<8&&y<8)||(x>12&&y<8)||(x<8&&y>12);
+  if(corner)continue;
+  if(((x*3+y*7+x*y*2)%5)<2)s+='<rect x="'+(x*m)+'" y="'+(y*m)+'" width="'+m+'" height="'+m+'"/>';
+ }
+ s+=fp(0,0)+fp(14,0)+fp(0,14);
+ return '<svg class="qr" viewBox="0 0 '+(n*m)+' '+(n*m)+'"><rect width="100%" height="100%" fill="#ECE9E2"/><g fill="#0e0d12">'+s+'</g></svg>';
+}
 
 var map=document.getElementById('map');
 for(var r=0;r<N;r++){
  var pc=document.createElement('div');
- pc.className='pc';pc.id='pc'+r;pc.setAttribute('data-r',r);
- pc.innerHTML='<img src="pz'+r+'.jpg" alt="">';
- (function(rr){pc.addEventListener('click',function(){selected=roomOfRow(rr);render();});})(r);
+ pc.className='pc';pc.id='pc'+r;
+ pc.innerHTML='<img src="pz'+r+'.jpg" alt=""><div class="badge" id="bdg'+r+'"></div>';
+ (function(rr){pc.addEventListener('click',function(){openRoom(rr);});})(r);
  map.appendChild(pc);
 }
 
+function rc(){var s='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',o='';for(var i=0;i<4;i++)o+=s[Math.floor(Math.random()*s.length)];o+='-';for(var j=0;j<2;j++)o+=s[Math.floor(Math.random()*s.length)];return 'WOM-'+o;}
+function count(){var c=0;for(var i=0;i<N;i++)if(done[i])c++;return c;}
+
 function render(){
+ var c=count();
  for(var r=0;r<N;r++){
-  var room=roomOfRow(r),pc=document.getElementById('pc'+r);
-  pc.className='pc'+(room<progress?' done':'')+(room===progress?' next':'')+(room===selected?' sel':'');
+  var pc=document.getElementById('pc'+r);
+  if(done[r]&&pc.className.indexOf('done')<0)pc.className='pc done';
+  else if(!done[r])pc.className='pc';
+  document.getElementById('bdg'+r).innerHTML=done[r]?IC.check:IC.qr;
  }
- document.getElementById('rank').textContent=RANKS[Math.min(progress,7)];
- document.getElementById('count').textContent=progress+' / 7 piezas';
- document.getElementById('bar').style.width=Math.round(progress/7*100)+'%';
+ var oldRank=document.getElementById('rank').textContent;
+ var newRank=RANKS[Math.min(c,7)];
+ document.getElementById('rank').textContent=newRank;
+ if(newRank!==oldRank){var ch=document.getElementById('rank');ch.classList.remove('bump');void ch.offsetWidth;ch.classList.add('bump');}
+ document.getElementById('count').textContent=c+' / 7 piezas';
+ document.getElementById('bar').style.width=Math.round(c/7*100)+'%';
  var rw=document.getElementById('reward');
- if(progress>=7)rw.innerHTML='Puzzle completado: premio de <b>30 EUR</b>';
- else if(progress===3)rw.innerHTML='Proximo descuento: <b>20 EUR</b>';
- else rw.innerHTML='Proximo descuento: <b>10 EUR</b>';
- var nm=document.getElementById('infoName'),su=document.getElementById('infoSt');
- nm.textContent=ROOMS[selected];
- if(selected<progress)su.textContent='Pieza iluminada. Sala conquistada y codigo de descuento ganado.';
- else if(selected===progress)su.textContent='Tu proxima pieza. Juega esta sala y se ilumina en el mapa.';
- else su.textContent='Pieza aun en gris. Esta sala todavia no la has jugado.';
- document.getElementById('pSalas').textContent=progress;
- document.getElementById('pRango').textContent=RANKS[Math.min(progress,7)];
- var ah=0;for(var k=0;k<progress;k++)ah+=(k>=3?20:10);if(progress>=7)ah+=30;
+ if(c>=7)rw.innerHTML='Puzzle completado. Has ganado el premio final de <b>30 EUR</b>.';
+ else if(c>=3)rw.innerHTML='La proxima sala te da <b>20 EUR</b> de descuento.';
+ else rw.innerHTML='La proxima sala te da <b>10 EUR</b> de descuento.';
+ document.getElementById('pSalas').textContent=c;
+ document.getElementById('pRango').textContent=newRank;
+ var ah=0;CODES.forEach(function(x){ah+=x.val;});
  document.getElementById('pAhorro').textContent=ah+'€';
 }
 
-var CODES=[];
-function rc(){var s='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',o='';for(var i=0;i<4;i++)o+=s[Math.floor(Math.random()*s.length)];o+='-';for(var j=0;j<2;j++)o+=s[Math.floor(Math.random()*s.length)];return 'WOM-'+o;}
 function renderCodes(){
  var L=document.getElementById('codeList');L.innerHTML='';
  document.getElementById('codeEmpty').style.display=CODES.length?'none':'block';
@@ -185,18 +243,79 @@ function renderCodes(){
   L.appendChild(d);
  });
 }
-document.getElementById('play').addEventListener('click',function(){
- if(progress<7){
-  CODES.unshift({val:(progress>=3?20:10),code:rc(),meta:'Ganado tras jugar '+ROOMS[progress],estado:'activo'});
-  renderCodes();
-  progress++;selected=Math.min(progress,6);render();
+
+var modal=document.getElementById('modal'),sheet=document.getElementById('sheet');
+function closeModal(){modal.classList.remove('on');}
+modal.addEventListener('click',function(e){if(e.target===modal)closeModal();});
+
+function openRoom(r){
+ modal.classList.add('on');
+ if(done[r]){
+  var mine=CODES.filter(function(x){return x.room===r;})[0];
+  sheet.innerHTML='<div class="grip"></div><div class="sh-room">'+NAMES[r]+'</div>'
+   +'<div class="sh-center"><span class="sh-tag">Pieza iluminada</span></div>'
+   +'<div class="sh-txt">Ya conquistaste esta sala. Su pieza brilla a todo color en tu mapa.</div>'
+   +(mine?'<div class="codebox"><div class="cv"><b>'+mine.val+'€</b><span>DESC.</span></div><div class="cc">'+mine.code+'<small>'+(mine.estado==='activo'?'Activo':'Usado')+'</small></div></div>':'')
+   +'<button class="sh-btn ghost" id="shX">Cerrar</button>';
+  document.getElementById('shX').addEventListener('click',closeModal);
+  return;
  }
+ sheet.innerHTML='<div class="grip"></div><div class="sh-room">'+NAMES[r]+'</div>'
+  +'<div class="sh-q">Has terminado esta sala?</div>'
+  +'<div class="sh-txt">Cuando acabes de jugar la sala, escanea su codigo QR para iluminar tu pieza del mapa y conseguir tu descuento.</div>'
+  +'<button class="sh-btn" id="shScan">'+IC.qr+'Escanear QR de la sala</button>'
+  +'<button class="sh-x" id="shNo">Aun no la he jugado</button>';
+ document.getElementById('shNo').addEventListener('click',closeModal);
+ document.getElementById('shScan').addEventListener('click',function(){scanRoom(r);});
+}
+
+var scanT=null;
+function scanRoom(r){
+ sheet.innerHTML='<div class="grip"></div><div class="sh-room">'+NAMES[r]+'</div>'
+  +'<div class="scanner"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>'
+  +fauxQR()+'<div class="scanline"></div></div>'
+  +'<div class="sh-txt">Apunta la camara al codigo QR que encontraras en la sala.</div>'
+  +'<button class="sh-btn" id="shSim">Simular escaneo</button>';
+ document.getElementById('shSim').addEventListener('click',function(){if(scanT)clearTimeout(scanT);success(r);});
+ scanT=setTimeout(function(){success(r);},2400);
+}
+
+function success(r){
+ if(scanT){clearTimeout(scanT);scanT=null;}
+ var c=count();
+ var val=(c>=3)?20:10;
+ var code={room:r,val:val,code:rc(),meta:'Ganado en '+NAMES[r],estado:'activo'};
+ CODES.unshift(code);
+ var willComplete=(c+1>=7);
+ sheet.innerHTML='<div class="grip"></div>'
+  +'<div class="burst">'+IC.check+'</div>'
+  +'<div class="sh-room">'+NAMES[r]+' conquistada</div>'
+  +'<div class="sh-txt">Has iluminado una pieza de tu mapa.</div>'
+  +'<div class="codebox"><div class="cv"><b>+'+val+'€</b><span>DESC.</span></div><div class="cc">'+code.code+'<small>Guardado en Mis codigos</small></div></div>'
+  +(willComplete?'<div class="sh-q" style="margin-top:14px">Puzzle completado: premio de 30 EUR</div>':'')
+  +'<button class="sh-btn" id="shOk">Genial</button>';
+ document.getElementById('shOk').addEventListener('click',closeModal);
+ // reveal the piece on the map behind the sheet
+ done[r]=true;
+ var pc=document.getElementById('pc'+r);
+ pc.className='pc done revealing';
+ document.getElementById('bdg'+r).innerHTML=IC.check;
+ setTimeout(function(){pc.classList.remove('revealing');},1300);
+ if(willComplete){CODES.unshift({room:-1,val:30,code:rc(),meta:'Premio: puzzle completado',estado:'activo'});}
+ renderCodes();render();
+}
+
+document.getElementById('reset').addEventListener('click',function(){
+ done=[false,false,false,false,false,false,false];CODES=[];
+ for(var r=0;r<N;r++){document.getElementById('pc'+r).className='pc';}
+ closeModal();renderCodes();render();
 });
-document.getElementById('reset').addEventListener('click',function(){progress=0;selected=0;CODES=[];renderCodes();render();});
 
 var V={Mapa:'viewMapa',Cod:'viewCodigos',Perf:'viewPerfil'};
 function show(k){
- for(var x in V){document.getElementById(V[x]).classList.toggle('on',x===k);}
+ for(var x in V){document.getElementById(V[x]).classList.remove('on');}
+ void document.getElementById(V[k]).offsetWidth;
+ document.getElementById(V[k]).classList.add('on');
  document.getElementById('nMapa').classList.toggle('on',k==='Mapa');
  document.getElementById('nCod').classList.toggle('on',k==='Cod');
  document.getElementById('nPerf').classList.toggle('on',k==='Perf');
